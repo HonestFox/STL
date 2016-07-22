@@ -1,4 +1,5 @@
 #pragma once
+#include "Iterator.h"
 
 template<typename T>
 struct __ListNode
@@ -15,41 +16,35 @@ struct __ListNode
 };
 
 template<typename T>
-struct ListIterator
+struct __ListIterator
 {
-	typedef ListIterator Self;
+	typedef __ListIterator Self;
 	typedef __ListNode<T> Node;
 
-	ListIterator()
+	__ListIterator()
 	{}
-
-	ListIterator(Node *node)
+	__ListIterator(Node *node)
 		:_node(node)
 	{}
-
 	bool operator==(const Self &s)
 	{
 		return _node == s._node;
 	}
-
 	bool operator!=(const Self &s)
 	{
 		return _node != s._node;
 	}
-
 	Self& operator++()				//前置
 	{
 		_node = _node->_next;
 		return *this;
 	}
-
 	Self operator++(int)			//后置
 	{
 		Self tmp = *this;
 		_node = _node->_next;
 		return tmp;
 	}
-
 	Self& operator--()			//前置
 	{
 		_node = _node->_prev;
@@ -61,7 +56,6 @@ struct ListIterator
 		_node = _node->_next;
 		return tmp;
 	}
-
 	T operator*()
 	{
 		return _node->_data;
@@ -76,7 +70,7 @@ class List
 protected:
 	typedef __ListNode<T>  Node;
 public:
-	typedef  ListIterator<T> ListIterator;
+	typedef  __ListIterator<T> ListIterator;
 public:
 	List()
 		:_head(new Node)
@@ -90,39 +84,39 @@ public:
 		return _head->_next == _head;
 	}
 
-	ListIterator begin()
+	ListIterator Begin()
 	{
 		return ListIterator(_head->_next);
 	}
 
-	ListIterator end()
+	ListIterator End()
 	{
 		return ListIterator(_head);
 	}
 
 	Node* CreateNode(const T &x)
 	{
-		return ( new Node(x) );
+		return (new Node(x));
 	}
 
-	ListIterator Insert(ListIterator pos, const T &x)    //在位置的前面插入  (第二个参数表示插入的个数)
+	ListIterator Insert(ListIterator pos, const T &x)    //在位置的前面插入
 	{
 		Node *tmp = CreateNode(x);
 		tmp->_next = pos._node;
 		tmp->_prev = (pos._node)->_prev;
 		pos._node->_prev->_next = tmp;
 		pos._node->_prev = tmp;
-		return tmp;
+		return ListIterator(tmp);
 	}
 
 	void PushBack(const T &x)
 	{
-		Insert((*this).end(), x);
+		Insert((*this).End(), x);
 	}
 
 	void PushFront(const T &x)
 	{
-		Insert((*this).begin(), x);
+		Insert((*this).Begin(), x);
 	}
 
 protected:
