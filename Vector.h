@@ -1,10 +1,10 @@
 #pragma once
 
-//进度 (7.21晚上 明天搞迭代器)
 template<class T>
 class Vector
 {
 	typedef T ValueType;
+public:
 	typedef ValueType* Iterator;
 	typedef const ValueType* ConstIterator;
 public:
@@ -52,6 +52,19 @@ public:
 		++_Finish;
 	}
 
+	void Insert(Iterator pos, const T &x)	//在pos的前面
+	{
+		_CheckStorage();
+		Iterator tmp = _Finish - 1;
+		while (pos != (tmp + 1) )
+		{
+			*(tmp + 1) = *(tmp);
+			--tmp;
+		}
+		*pos = x;
+		++_Finish;
+	}
+
 	T& operator[](size_t n)
 	{
 		return *(_Start + n);
@@ -64,7 +77,7 @@ protected:
 		{
 			size_t size = Size();
 			T *tmp = new T[size * 2 + 1];
-			for (int i = 0; i < size; ++i)
+			for (size_t i = 0; i < size; ++i)
 			{
 				*(tmp + i) = *(_Start + i);
 			}
